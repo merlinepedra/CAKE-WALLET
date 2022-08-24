@@ -32,4 +32,14 @@ abstract class IoniaGiftCardDetailsViewModelBase with Store {
       redeemState = FailureState(e.toString());
     }
   }
+   @action
+  Future<void> unRedeem() async {
+    try {
+      redeemState = IsExecutingState();
+       await ioniaService.chargeGiftCard(giftCardId: giftCard.id, amount: 0.01 );
+      redeemState = ExecutedSuccessfullyState();
+    } catch(e) {
+      redeemState = FailureState(e.toString());
+    }
+  }
 }

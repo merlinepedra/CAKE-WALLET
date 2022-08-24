@@ -5,7 +5,6 @@ import 'package:cake_wallet/src/screens/base_page.dart';
 import 'package:cake_wallet/src/screens/ionia/widgets/ionia_alert_model.dart';
 import 'package:cake_wallet/src/screens/ionia/widgets/ionia_tile.dart';
 import 'package:cake_wallet/src/screens/ionia/widgets/text_icon_button.dart';
-import 'package:cake_wallet/src/widgets/alert_background.dart';
 import 'package:cake_wallet/src/widgets/alert_with_one_action.dart';
 import 'package:cake_wallet/src/widgets/primary_button.dart';
 import 'package:cake_wallet/src/widgets/scollable_with_bottom_section.dart';
@@ -133,7 +132,14 @@ class IoniaGiftCardDetailPage extends BasePage {
                 textColor: Colors.white);
               }
 
-              return Container();
+              return LoadingPrimaryButton(
+                isLoading: viewModel.redeemState is IsExecutingState,
+                onPressed: () => viewModel.unRedeem().then((_){
+                 Navigator.of(context).pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst);
+                }),
+                text: S.of(context).mark_as_unredeemed,
+                color: Theme.of(context).accentTextTheme.body2.color,
+                textColor: Colors.white);
             })),
     );
   }
