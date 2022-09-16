@@ -12,6 +12,7 @@ import 'package:cake_wallet/typography.dart';
 import 'package:cake_wallet/utils/show_bar.dart';
 import 'package:cake_wallet/utils/show_pop_up.dart';
 import 'package:cake_wallet/view_model/ionia/ionia_gift_card_details_view_model.dart';
+import 'package:device_display_brightness/device_display_brightness.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,6 +24,8 @@ class IoniaGiftCardDetailPage extends BasePage {
   IoniaGiftCardDetailPage(this.viewModel);
 
   final IoniaGiftCardDetailsViewModel viewModel;
+
+
 
   @override
   Widget leading(BuildContext context) {
@@ -46,7 +49,10 @@ class IoniaGiftCardDetailPage extends BasePage {
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
               padding: EdgeInsets.all(0),
-              onPressed: () => onClose(context),
+              onPressed: () {
+                onClose(context);
+                DeviceDisplayBrightness.setBrightness(viewModel.brightness);
+              },
               child: _backButton),
         ),
       ),
@@ -63,6 +69,7 @@ class IoniaGiftCardDetailPage extends BasePage {
 
   @override
   Widget body(BuildContext context) {
+    viewModel.increaseBrightness();
     reaction((_) => viewModel.redeemState, (ExecutionState state) {
       if (state is FailureState) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -109,7 +116,7 @@ class IoniaGiftCardDetailPage extends BasePage {
             buildIoniaTile(
               context,
               title: S.of(context).amount,
-              subTitle: viewModel.giftCard.remainingAmount.toStringAsFixed(2) ?? '0.00',
+              subTitle: viewModel.remainingAmount.toStringAsFixed(2) ?? '0.00',
             )),
           Divider(height: 50),
           TextIconButton(
@@ -119,18 +126,40 @@ class IoniaGiftCardDetailPage extends BasePage {
         ],
       ),
       bottomSection: Padding(
-          padding: EdgeInsets.only(bottom: 12),
-          child: Observer(builder: (_) {
-             if (!viewModel.giftCard.isEmpty) {
-              return LoadingPrimaryButton(
-                isLoading: viewModel.redeemState is IsExecutingState,
-                onPressed: () => viewModel.redeem().then((_){
-                 Navigator.of(context).pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst);
-                }),
-                text: S.of(context).mark_as_redeemed,
-                color: Theme.of(context).accentTextTheme.body2.color,
-                textColor: Colors.white);
-              }
+        padding: EdgeInsets.only(bottom: 12),
+        child: Observer(
+          builder: (_) {
+            if (!viewModel.giftCard.isEmpty) {
+              return Column(
+                children: [
+                  //PrimaryButton(
+                  //  onPressed: () async {
+                  //    final amount = await Navigator.of(context)
+                  //        .pushNamed(Routes.ioniaMoreOptionsPage, arguments: [viewModel.giftCard]) as String;
+                  //    if (amount != null) {
+                  //      viewModel.updateRemaining(double.parse(amount));
+                  //    }
+                  //  },
+                  //  text: S.of(context).more_options,
+                  //  color: Theme.of(context).accentTextTheme.caption.color,
+                  //  textColor: Theme.of(context).primaryTextTheme.title.color,
+                  //),
+                  //SizedBox(height: 12),
+                  LoadingPrimaryButton(
+                    isLoading: viewModel.redeemState is IsExecutingState,
+                    onPressed: () => viewModel.redeem().then(
+                      (_) {
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst);
+                      },
+                    ),
+                    text: S.of(context).mark_as_redeemed,
+                    color: Theme.of(context).accentTextTheme.body2.color,
+                    textColor: Colors.white,
+                  ),
+                ],
+              );
+            }
 
               return LoadingPrimaryButton(
                 isLoading: viewModel.redeemState is IsExecutingState,

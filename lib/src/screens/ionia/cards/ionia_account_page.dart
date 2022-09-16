@@ -124,7 +124,7 @@ class IoniaAccountPage extends BasePage {
           //),
           SizedBox(height: 40),
           Observer(
-            builder: (_) => IoniaTile(title: S.of(context).email_address, subTitle: ioniaAccountViewModel.email),
+            builder: (_) => IoniaTile(title: S.of(context).email_address, subTitle: ioniaAccountViewModel.email ?? ''),
           ),
           Divider()
         ],
@@ -169,8 +169,11 @@ class _GradiantContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).scaffoldBackgroundColor,
-            Theme.of(context).accentColor,
+            Theme.of(context)
+                            .primaryTextTheme
+                            .subhead
+                            .decorationColor,
+            Theme.of(context).primaryTextTheme.subhead.color,           
           ],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,

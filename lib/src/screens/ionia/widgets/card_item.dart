@@ -8,10 +8,12 @@ class CardItem extends StatelessWidget {
     @required this.backgroundColor,
     @required this.titleColor,
     @required this.subtitleColor,
+    this.hideBorder = false,
     this.discountBackground,
     this.onTap,
     this.logoUrl,
     this.discount,
+    this.isAmount = false,
   });
 
   final VoidCallback onTap;
@@ -19,6 +21,8 @@ class CardItem extends StatelessWidget {
   final String subTitle;
   final String logoUrl;
   final double discount;
+  final bool isAmount;
+  final bool hideBorder;
   final Color backgroundColor;
   final Color titleColor;
   final Color subtitleColor;
@@ -36,7 +40,7 @@ class CardItem extends StatelessWidget {
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
+              border: hideBorder ? Border.symmetric(horizontal: BorderSide.none, vertical: BorderSide.none) : Border.all(
                 color: Colors.white.withOpacity(0.20),
               ),
             ),
@@ -100,6 +104,7 @@ class CardItem extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: DiscountBadge(
                   percentage: discount,
+                  isAmount: isAmount,
                   discountBackground: discountBackground,
                 ),
               ),

@@ -2,12 +2,15 @@ import 'package:cake_wallet/core/yat_service.dart';
 import 'package:cake_wallet/entities/parse_address_from_domain.dart';
 import 'package:cake_wallet/entities/wake_lock.dart';
 import 'package:cake_wallet/ionia/ionia_anypay.dart';
-import 'package:cake_wallet/ionia/ionia_category.dart';
 import 'package:cake_wallet/ionia/ionia_gift_card.dart';
+import 'package:cake_wallet/ionia/ionia_tip.dart';
+import 'package:cake_wallet/src/screens/ionia/cards/ionia_custom_redeem_page.dart';
 import 'package:cake_wallet/src/screens/ionia/cards/ionia_gift_card_detail_page.dart';
+import 'package:cake_wallet/src/screens/ionia/cards/ionia_more_options_page.dart';
 import 'package:cake_wallet/view_model/ionia/ionia_auth_view_model.dart';
 import 'package:cake_wallet/view_model/ionia/ionia_buy_card_view_model.dart';
-import 'package:cake_wallet/view_model/ionia/ionia_filter_view_model.dart';
+import 'package:cake_wallet/view_model/ionia/ionia_custom_tip_view_model.dart';
+import 'package:cake_wallet/view_model/ionia/ionia_custom_redeem_view_model.dart';
 import 'package:cake_wallet/ionia/ionia_service.dart';
 import 'package:cake_wallet/ionia/ionia_api.dart';
 import 'package:cake_wallet/ionia/ionia_merchant.dart';
@@ -485,7 +488,9 @@ Future setup(
       _tradesSource,
       getIt.get<ExchangeTemplateStore>(),
       getIt.get<TradesStore>(),
-      getIt.get<AppStore>().settingsStore));
+      getIt.get<AppStore>().settingsStore,
+      getIt.get<SharedPreferences>(),
+  ));
 
   getIt.registerFactory(() => ExchangeTradeViewModel(
       wallet: getIt.get<AppStore>().wallet,
@@ -570,7 +575,8 @@ Future setup(
       (WalletType type, _) => PreSeedPage(type));
 
   getIt.registerFactoryParam<TradeDetailsViewModel, Trade, void>((trade, _) =>
-      TradeDetailsViewModel(tradeForDetails: trade, trades: _tradesSource));
+      TradeDetailsViewModel(tradeForDetails: trade, trades: _tradesSource,
+          settingsStore: getIt.get<SettingsStore>()));
 
   getIt.registerFactory(() => BackupService(
       getIt.get<FlutterSecureStorage>(),
@@ -678,8 +684,6 @@ Future setup(
         getIt.get<IoniaService>(),
         getIt.get<AnyPayApi>(),
         getIt.get<AppStore>().wallet));
-  
-  getIt.registerFactory<IoniaFilterViewModel>(() => IoniaFilterViewModel());
 
   getIt.registerFactory(() => IoniaGiftCardsListViewModel(ioniaService: getIt.get<IoniaService>()));
 
@@ -729,16 +733,36 @@ Future setup(
       ioniaService: getIt.get<IoniaService>(),
       giftCard: giftCard);
   });
-
+ 
+ getIt.registerFactoryParam<IoniaCustomTipViewModel, List, void>((List args, _) {
+     final amount = args[0] as double;
+     final merchant = args[1] as IoniaMerchant;
+     final tip = args[2] as IoniaTip;
+     
+     return IoniaCustomTipViewModel(amount: amount, tip: tip, ioniaMerchant: merchant);
+  });
+  
   getIt.registerFactoryParam<IoniaGiftCardDetailPage, IoniaGiftCard, void>((IoniaGiftCard giftCard, _) {
      return IoniaGiftCardDetailPage(getIt.get<IoniaGiftCardDetailsViewModel>(param1: giftCard));
   });
 
-  getIt.registerFactoryParam<IoniaCustomTipPage, List, void>((List args, _) {
-    final amount = args.first as String;
-    final merchant = args.last as IoniaMerchant;
+  getIt.registerFactoryParam<IoniaMoreOptionsPage, List, void>((List args, _){
+    final giftCard = args.first as IoniaGiftCard;
+  
+    return IoniaMoreOptionsPage(giftCard); 
+  });
 
-    return IoniaCustomTipPage(getIt.get<IoniaMerchPurchaseViewModel>(param1: amount, param2: merchant));
+  getIt.registerFactoryParam<IoniaCustomRedeemViewModel, IoniaGiftCard, void>((IoniaGiftCard giftCard, _) => IoniaCustomRedeemViewModel(giftCard));
+
+  getIt.registerFactoryParam<IoniaCustomRedeemPage, List, void>((List args, _){
+    final giftCard = args.first as IoniaGiftCard;
+  
+    return IoniaCustomRedeemPage(getIt.get<IoniaCustomRedeemViewModel>(param1: giftCard) ); 
+  });
+
+
+  getIt.registerFactoryParam<IoniaCustomTipPage, List, void>((List args, _) {
+    return IoniaCustomTipPage(getIt.get<IoniaCustomTipViewModel>(param1: args));
   });
 
   getIt.registerFactory(() => IoniaManageCardsPage(getIt.get<IoniaGiftCardsListViewModel>()));

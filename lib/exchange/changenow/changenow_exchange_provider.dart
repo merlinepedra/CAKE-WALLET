@@ -19,7 +19,9 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
       : _lastUsedRateId = '',
         super(
             pairList: CryptoCurrency.all
+                .where((i) => i != CryptoCurrency.xhv)
                 .map((i) => CryptoCurrency.all
+                    .where((i) => i != CryptoCurrency.xhv)
                     .map((k) => ExchangePair(from: i, to: k, reverse: true))
                     .where((c) => c != null))
                 .expand((i) => i)
@@ -38,6 +40,9 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
 
   @override
   bool get isAvailable => true;
+
+  @override
+  bool get isEnabled => true;
 
   @override
   ExchangeProviderDescription get description =>
@@ -91,12 +96,12 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
       'Content-Type': 'application/json'};
     final flow = getFlow(isFixedRateMode);
     final body = <String, String>{
-      'fromCurrency': normalizeCryptoCurrency(_request.from), 
+      'fromCurrency': normalizeCryptoCurrency(_request.from),
       'toCurrency': normalizeCryptoCurrency(_request.to),
       'fromNetwork': networkFor(_request.from),
       'toNetwork': networkFor(_request.to),
-      'fromAmount': _request.fromAmount, 
-      'toAmount': _request.toAmount, 
+      'fromAmount': _request.fromAmount,
+      'toAmount': _request.toAmount,
       'address': _request.address,
       'flow': flow,
       'refundAddress': _request.refundAddress
