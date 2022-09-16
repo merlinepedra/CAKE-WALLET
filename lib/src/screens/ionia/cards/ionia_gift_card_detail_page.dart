@@ -147,29 +147,27 @@ class IoniaGiftCardDetailPage extends BasePage {
                   //SizedBox(height: 12),
                   LoadingPrimaryButton(
                     isLoading: viewModel.redeemState is IsExecutingState,
-                    onPressed: () => viewModel.redeem().then(
-                      (_) {
-                        Navigator.of(context)
-                            .pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst);
-                      },
-                    ),
-                    text: S.of(context).mark_as_redeemed,
+                    onPressed: ()  {
+                     if(viewModel.giftCard.isActive) {
+                        viewModel.redeem().then((_) => 
+                          Navigator.of(context).pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst));
+                     }else{
+                        viewModel.unRedeem().then((_) => 
+                          Navigator.of(context).pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst)              
+                        );
+                     }
+                    },
+                    text: viewModel.giftCard.isActive ? S.of(context).mark_as_redeemed :  S.of(context).mark_as_unredeemed,
                     color: Theme.of(context).accentTextTheme.body2.color,
                     textColor: Colors.white,
                   ),
                 ],
               );
             }
-
-              return LoadingPrimaryButton(
-                isLoading: viewModel.redeemState is IsExecutingState,
-                onPressed: () => viewModel.unRedeem().then((_){
-                 Navigator.of(context).pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst);
-                }),
-                text: S.of(context).mark_as_unredeemed,
-                color: Theme.of(context).accentTextTheme.body2.color,
-                textColor: Colors.white);
-            })),
+            return Container();
+          },
+        ),
+      ),
     );
   }
 
