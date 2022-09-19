@@ -43,7 +43,7 @@ abstract class IoniaGiftCardDetailsViewModelBase with Store {
   Future<void> unRedeem() async {
     try {
       redeemState = IsExecutingState();
-       await ioniaService.chargeGiftCard(giftCardId: giftCard.id, amount: 0.01 );
+       await ioniaService.chargeGiftCard(giftCardId: giftCard.id, amount: 0.99 );
       redeemState = ExecutedSuccessfullyState();
     } catch(e) {
       redeemState = FailureState(e.toString());

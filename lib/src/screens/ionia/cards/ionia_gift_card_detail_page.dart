@@ -129,7 +129,6 @@ class IoniaGiftCardDetailPage extends BasePage {
         padding: EdgeInsets.only(bottom: 12),
         child: Observer(
           builder: (_) {
-            if (!viewModel.giftCard.isEmpty) {
               return Column(
                 children: [
                   //PrimaryButton(
@@ -148,7 +147,7 @@ class IoniaGiftCardDetailPage extends BasePage {
                   LoadingPrimaryButton(
                     isLoading: viewModel.redeemState is IsExecutingState,
                     onPressed: ()  {
-                     if(viewModel.giftCard.isActive) {
+                     if(!viewModel.giftCard.isEmpty) {
                         viewModel.redeem().then((_) => 
                           Navigator.of(context).pushNamedAndRemoveUntil(Routes.ioniaManageCardsPage, (route) => route.isFirst));
                      }else{
@@ -157,14 +156,13 @@ class IoniaGiftCardDetailPage extends BasePage {
                         );
                      }
                     },
-                    text: viewModel.giftCard.isActive ? S.of(context).mark_as_redeemed :  S.of(context).mark_as_unredeemed,
+                    text: viewModel.giftCard.isEmpty ? S.of(context).mark_as_unredeemed :  S.of(context).mark_as_redeemed,
                     color: Theme.of(context).accentTextTheme.body2.color,
                     textColor: Colors.white,
                   ),
                 ],
               );
-            }
-            return Container();
+            
           },
         ),
       ),
