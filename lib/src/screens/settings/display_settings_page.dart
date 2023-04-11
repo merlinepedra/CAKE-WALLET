@@ -29,20 +29,33 @@ class DisplaySettingsPage extends BasePage {
         child: Column(
           children: [
             SettingsSwitcherCell(
-            title: S.current.settings_display_balance,
-            value:  _displaySettingsViewModel.shouldDisplayBalance,
-            onValueChange: (_, bool value) {
-               _displaySettingsViewModel.setShouldDisplayBalance(value);          
-            }),
+                title: S.current.settings_display_balance,
+                value: _displaySettingsViewModel.shouldDisplayBalance,
+                onValueChange: (_, bool value) {
+                  _displaySettingsViewModel.setShouldDisplayBalance(value);
+                }),
+
+            SettingsSwitcherCell(
+              title: S.current.show_market_place,
+              value: _displaySettingsViewModel.shouldShowMarketPlaceInDashboard,
+              onValueChange: (_, bool value) {
+                _displaySettingsViewModel
+                    .setShouldShowMarketPlaceInDashbaord(value);
+              },
+            ),
             //if (!isHaven) it does not work correctly
-            if(!_displaySettingsViewModel.disabledFiatApiMode)
+            if (!_displaySettingsViewModel.disabledFiatApiMode)
               SettingsPickerCell<FiatCurrency>(
                 title: S.current.settings_currency,
                 searchHintText: S.current.search_currency,
                 items: FiatCurrency.all,
                 selectedItem: _displaySettingsViewModel.fiatCurrency,
-                onItemSelected: (FiatCurrency currency) => _displaySettingsViewModel.setFiatCurrency(currency),
-                images: FiatCurrency.all.map((e) => Image.asset("assets/images/flags/${e.countryCode}.png")).toList(),
+                onItemSelected: (FiatCurrency currency) =>
+                    _displaySettingsViewModel.setFiatCurrency(currency),
+                images: FiatCurrency.all
+                    .map((e) =>
+                        Image.asset("assets/images/flags/${e.countryCode}.png"))
+                    .toList(),
                 isGridView: true,
                 matchingCriteria: (FiatCurrency currency, String searchText) {
                   return currency.title.toLowerCase().contains(searchText) ||
@@ -59,10 +72,14 @@ class DisplaySettingsPage extends BasePage {
               selectedItem: _displaySettingsViewModel.languageCode,
               onItemSelected: _displaySettingsViewModel.onLanguageSelected,
               images: LanguageService.list.keys
-                  .map((e) => Image.asset("assets/images/flags/${LanguageService.localeCountryCode[e]}.png"))
+                  .map((e) => Image.asset(
+                      "assets/images/flags/${LanguageService.localeCountryCode[e]}.png"))
                   .toList(),
               matchingCriteria: (String code, String searchText) {
-                return LanguageService.list[code]?.toLowerCase().contains(searchText) ?? false;
+                return LanguageService.list[code]
+                        ?.toLowerCase()
+                        .contains(searchText) ??
+                    false;
               },
             ),
             SettingsChoicesCell(
@@ -70,7 +87,8 @@ class DisplaySettingsPage extends BasePage {
                 title: S.current.color_theme,
                 items: ThemeList.all,
                 selectedItem: _displaySettingsViewModel.theme,
-                onItemSelected: (ThemeBase theme) => _displaySettingsViewModel.setTheme(theme),
+                onItemSelected: (ThemeBase theme) =>
+                    _displaySettingsViewModel.setTheme(theme),
               ),
             ),
           ],

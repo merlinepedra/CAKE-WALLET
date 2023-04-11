@@ -32,11 +32,12 @@ class PreferencesKey {
   static const lastAuthTimeMilliseconds = 'last_auth_time_milliseconds';
   static const lastPopupDate = 'last_popup_date';
 
-
-  static String moneroWalletUpdateV1Key(String name)
-    => '${PreferencesKey.moneroWalletPasswordUpdateV1Base}_${name}';
+  static String moneroWalletUpdateV1Key(String name) =>
+      '${PreferencesKey.moneroWalletPasswordUpdateV1Base}_${name}';
 
   static const exchangeProvidersSelection = 'exchange-providers-selection';
-  static const clearnetDonationLink = 'clearnet_donation_link'; 
-  static const onionDonationLink = 'onion_donation_link'; 
+  static const clearnetDonationLink = 'clearnet_donation_link';
+  static const onionDonationLink = 'onion_donation_link';
+  static const shouldShowMarketPlaceInDashboard =
+      'should_show_marketplace_in_dashboard';
 }

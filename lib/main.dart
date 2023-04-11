@@ -43,7 +43,6 @@ final rootKey = GlobalKey<RootState>();
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Future<void> main() async {
-
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -52,7 +51,8 @@ Future<void> main() async {
     /// A callback that is invoked when an unhandled error occurs in the root
     /// isolate.
     PlatformDispatcher.instance.onError = (error, stack) {
-      ExceptionHandler.onError(FlutterErrorDetails(exception: error, stack: stack));
+      ExceptionHandler.onError(
+          FlutterErrorDetails(exception: error, stack: stack));
 
       return true;
     };
@@ -125,13 +125,15 @@ Future<void> main() async {
     final templates = await Hive.openBox<Template>(Template.boxName);
     final exchangeTemplates =
         await Hive.openBox<ExchangeTemplate>(ExchangeTemplate.boxName);
-    final anonpayInvoiceInfo = await Hive.openBox<AnonpayInvoiceInfo>(AnonpayInvoiceInfo.boxName);
+    final anonpayInvoiceInfo =
+        await Hive.openBox<AnonpayInvoiceInfo>(AnonpayInvoiceInfo.boxName);
     Box<UnspentCoinsInfo>? unspentCoinsInfoSource;
-    
+
     if (!isMoneroOnly) {
-      unspentCoinsInfoSource = await Hive.openBox<UnspentCoinsInfo>(UnspentCoinsInfo.boxName);
+      unspentCoinsInfoSource =
+          await Hive.openBox<UnspentCoinsInfo>(UnspentCoinsInfo.boxName);
     }
-    
+
     await initialSetup(
         sharedPreferences: await SharedPreferences.getInstance(),
         nodes: nodes,
@@ -149,7 +151,8 @@ Future<void> main() async {
         initialMigrationVersion: 19);
     runApp(App());
   }, (error, stackTrace) async {
-    ExceptionHandler.onError(FlutterErrorDetails(exception: error, stack: stackTrace));
+    ExceptionHandler.onError(
+        FlutterErrorDetails(exception: error, stack: stackTrace));
   });
 }
 
@@ -178,17 +181,17 @@ Future<void> initialSetup(
       tradeSource: tradesSource,
       nodes: nodes);
   await setup(
-      walletInfoSource: walletInfoSource,
-      nodeSource: nodes,
-      contactSource: contactSource,
-      tradesSource: tradesSource,
-      templates: templates,
-      exchangeTemplates: exchangeTemplates,
-      transactionDescriptionBox: transactionDescriptions,
-      ordersSource: ordersSource,
-      anonpayInvoiceInfoSource: anonpayInvoiceInfo,
-      unspentCoinsInfoSource: unspentCoinsInfoSource,
-      );
+    walletInfoSource: walletInfoSource,
+    nodeSource: nodes,
+    contactSource: contactSource,
+    tradesSource: tradesSource,
+    templates: templates,
+    exchangeTemplates: exchangeTemplates,
+    transactionDescriptionBox: transactionDescriptions,
+    ordersSource: ordersSource,
+    anonpayInvoiceInfoSource: anonpayInvoiceInfo,
+    unspentCoinsInfoSource: unspentCoinsInfoSource,
+  );
   await bootstrap(navigatorKey);
   monero?.onStartup();
 }
@@ -199,8 +202,7 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> with SingleTickerProviderStateMixin {
-  AppState()
-    : yatStore = getIt.get<YatStore>() {
+  AppState() : yatStore = getIt.get<YatStore>() {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   }
@@ -267,9 +269,9 @@ class AppState extends State<App> with SingleTickerProviderStateMixin {
       final statusBarColor = Colors.transparent;
       final authenticationStore = getIt.get<AuthenticationStore>();
       final initialRoute =
-      authenticationStore.state == AuthenticationState.uninitialized
-          ? Routes.disclaimer
-          : Routes.login;
+          authenticationStore.state == AuthenticationState.uninitialized
+              ? Routes.disclaimer
+              : Routes.login;
       final currentTheme = settingsStore.currentTheme;
       final statusBarBrightness = currentTheme.type == ThemeType.dark
           ? Brightness.light

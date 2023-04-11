@@ -7,7 +7,8 @@ import 'package:cake_wallet/entities/fiat_api_mode.dart';
 
 part 'display_settings_view_model.g.dart';
 
-class DisplaySettingsViewModel = DisplaySettingsViewModelBase with _$DisplaySettingsViewModel;
+class DisplaySettingsViewModel = DisplaySettingsViewModelBase
+    with _$DisplaySettingsViewModel;
 
 abstract class DisplaySettingsViewModelBase with Store {
   DisplaySettingsViewModelBase(
@@ -23,19 +24,27 @@ abstract class DisplaySettingsViewModelBase with Store {
   String get languageCode => _settingsStore.languageCode;
 
   @computed
-  BalanceDisplayMode get balanceDisplayMode => _settingsStore.balanceDisplayMode;
+  BalanceDisplayMode get balanceDisplayMode =>
+      _settingsStore.balanceDisplayMode;
 
   @computed
-  bool get shouldDisplayBalance => balanceDisplayMode == BalanceDisplayMode.displayableBalance;
+  bool get shouldDisplayBalance =>
+      balanceDisplayMode == BalanceDisplayMode.displayableBalance;
+
+  @computed
+  bool get shouldShowMarketPlaceInDashboard =>
+      _settingsStore.shouldShowMarketPlaceInDashboard;
 
   @computed
   ThemeBase get theme => _settingsStore.currentTheme;
 
   @computed
-  bool get disabledFiatApiMode => _settingsStore.fiatApiMode == FiatApiMode.disabled;
+  bool get disabledFiatApiMode =>
+      _settingsStore.fiatApiMode == FiatApiMode.disabled;
 
   @action
-  void setBalanceDisplayMode(BalanceDisplayMode value) => _settingsStore.balanceDisplayMode = value;
+  void setBalanceDisplayMode(BalanceDisplayMode value) =>
+      _settingsStore.balanceDisplayMode = value;
 
   @action
   void setShouldDisplayBalance(bool value) {
@@ -57,5 +66,11 @@ abstract class DisplaySettingsViewModelBase with Store {
   }
 
   @action
-  void setFiatCurrency(FiatCurrency value) => _settingsStore.fiatCurrency = value;
+  void setFiatCurrency(FiatCurrency value) =>
+      _settingsStore.fiatCurrency = value;
+
+  @action
+  void setShouldShowMarketPlaceInDashbaord(bool value) {
+    _settingsStore.shouldShowMarketPlaceInDashboard = value;
+  }
 }
