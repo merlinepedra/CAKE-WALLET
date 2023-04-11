@@ -187,19 +187,21 @@ class DashboardPage extends BasePage {
                               route: Routes.addressPage),
                           if (walletViewModel.hasExchangeAction)
                             ActionButton(
-                                image: Image.asset('assets/images/transfer.png',
-                                    height: 24,
-                                    width: 24,
-                                    color:
-                                        !walletViewModel.isEnabledExchangeAction
-                                            ? Theme.of(context)
-                                                .accentTextTheme!
-                                                .headline3!
-                                                .backgroundColor!
-                                            : Theme.of(context)
-                                                .accentTextTheme!
-                                                .headline2!
-                                                .backgroundColor!),
+                                image: Image.asset(
+                                  'assets/images/transfer.png',
+                                  height: 24,
+                                  width: 24,
+                                  color:
+                                      !walletViewModel.isEnabledExchangeAction
+                                          ? Theme.of(context)
+                                              .accentTextTheme!
+                                              .headline3!
+                                              .backgroundColor!
+                                          : Theme.of(context)
+                                              .accentTextTheme!
+                                              .headline2!
+                                              .backgroundColor!,
+                                ),
                                 title: S.of(context).exchange,
                                 onClick: () async =>
                                     _onClickExchangeButton(context),
