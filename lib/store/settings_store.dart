@@ -157,6 +157,11 @@ abstract class SettingsStoreBase with Store {
             PreferencesKey.currentBalanceDisplayModeKey, mode.serialize()));
 
     reaction(
+        (_) => shouldShowMarketPlaceInDashboard,
+        (bool value) => sharedPreferences.setBool(
+            PreferencesKey.shouldShowMarketPlaceInDashboard, value));
+
+    reaction(
         (_) => exchangeStatus,
         (ExchangeApiMode mode) => sharedPreferences.setInt(
             PreferencesKey.exchangeStatusKey, mode.serialize()));
@@ -295,7 +300,7 @@ abstract class SettingsStoreBase with Store {
         false;
     final shouldShowMarketPlaceInDashboard = sharedPreferences
             .getBool(PreferencesKey.shouldShowMarketPlaceInDashboard) ??
-        false;
+        true;
     final currentFiatApiMode = FiatApiMode.deserialize(
         raw: sharedPreferences.getInt(PreferencesKey.currentFiatApiModeKey) ??
             FiatApiMode.enabled.raw);
