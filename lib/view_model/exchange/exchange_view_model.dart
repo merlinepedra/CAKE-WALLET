@@ -341,12 +341,10 @@ abstract class ExchangeViewModelBase with Store {
      double maxLimit = limits.max ?? 0;
 
      if (_enteredAmount < minLimit) {
-       receiveAmount = '';
        return false;
      }
 
      if (_enteredAmount > maxLimit && isFixedRateMode) {
-       receiveAmount = '';
        return false;
      }
 
