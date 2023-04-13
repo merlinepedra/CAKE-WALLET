@@ -239,8 +239,20 @@ class ExchangePage extends BasePage {
                                     .primaryTextTheme!
                                     .bodyText1!
                                     .color!,
-                                currencyValueValidator: AmountValidator(
-                                    currency: exchangeViewModel.depositCurrency),
+                                currencyValueValidator: 
+                                    exchangeViewModel.isFixedRateMode == false
+                                           ? (value) => AmountValidator(
+                                                 isAutovalidate: true,
+                                                 currency: exchangeViewModel
+                                                     .depositCurrency,
+                                                 minValue: exchangeViewModel
+                                                     .limits.min
+                                                     .toString(),
+                                                 maxValue: exchangeViewModel
+                                                     .limits.max
+                                                     .toString(),
+                                               ).call(value)
+                                           : null,
                                 addressTextFieldValidator: AddressValidator(
                                     type: exchangeViewModel.depositCurrency),
                                 onPushPasteButton: (context) async {
@@ -303,8 +315,21 @@ class ExchangePage extends BasePage {
                                       .primaryTextTheme!
                                       .bodyText1!
                                       .decorationColor!,
-                                  currencyValueValidator: AmountValidator(
-                                      currency: exchangeViewModel.receiveCurrency),
+                               currencyValueValidator: (value) =>
+                                             exchangeViewModel.isFixedRateMode ==
+                                                     true
+                                                 ? AmountValidator(
+                                                     isAutovalidate: true,
+                                                     currency: exchangeViewModel
+                                                         .receiveCurrency,
+                                                     minValue: exchangeViewModel
+                                                         .limits.min
+                                                         .toString(),
+                                                     maxValue: exchangeViewModel
+                                                         .limits.max
+                                                         .toString(),
+                                                   ).call(value)
+                                                 : null,
                                   addressTextFieldValidator:
                                   AddressValidator(
                                       type: exchangeViewModel
@@ -686,9 +711,13 @@ class ExchangePage extends BasePage {
     depositAmountController.addListener(() {
       if (depositAmountController.text != exchangeViewModel.depositAmount) {
         _depositAmountDebounce.run(() { 
-          exchangeViewModel.changeDepositAmount(
-              amount: depositAmountController.text);
-          exchangeViewModel.isReceiveAmountEntered = false;
+      if (exchangeViewModel.checkIfInputMeetsMinOrMaxCondition(
+                   depositAmountController.text) ==
+               true){
+  exchangeViewModel.changeDepositAmount(
+      amount: depositAmountController.text);
+  exchangeViewModel.isReceiveAmountEntered = false;
+}
         });
       }
     });
@@ -699,9 +728,13 @@ class ExchangePage extends BasePage {
     receiveAmountController.addListener(() {
       if (receiveAmountController.text != exchangeViewModel.receiveAmount) {
         _receiveAmountDebounce.run(() {
-          exchangeViewModel.changeReceiveAmount(
-              amount: receiveAmountController.text);
-          exchangeViewModel.isReceiveAmountEntered = true;
+         if (exchangeViewModel.checkIfInputMeetsMinOrMaxCondition(
+                   receiveAmountController.text) ==
+               true) {
+  exchangeViewModel.changeReceiveAmount(
+      amount: receiveAmountController.text);
+  exchangeViewModel.isReceiveAmountEntered = true;
+}
         });
       }
     });

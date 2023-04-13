@@ -697,5 +697,7 @@
   "onion_link": "Onion link",
   "decimal_places_error": "Too many decimal places",
   "edit_node": "Edit Node",
-  "sell_monero_com_alert_content": "Selling Monero is not supported yet"
+  "sell_monero_com_alert_content": "Selling Monero is not supported yet",
+  "error_text_input_below_minimum_limit" : "Amount is less than the minimum",
+  "error_text_input_above_maximum_limit" : "Amount is more than the maximum"
 }

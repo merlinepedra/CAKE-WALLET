@@ -198,6 +198,10 @@ abstract class ExchangeViewModelBase with Store {
   @observable
   bool isFixedRateMode;
 
+
+  @observable
+  Limits limits;
+
   @computed
   SyncStatus get status => wallet.syncStatus;
 
@@ -241,7 +245,6 @@ abstract class ExchangeViewModelBase with Store {
 
   List<CryptoCurrency> depositCurrencies;
 
-  Limits limits;
 
   NumberFormat _cryptoNumberFormat;
 
@@ -305,7 +308,19 @@ abstract class ExchangeViewModelBase with Store {
     }
 
     final _enteredAmount = double.tryParse(amount.replaceAll(',', '.')) ?? 0;
+    
+     double minLimit = limits.min ?? 0;
+     double maxLimit = limits.max ?? 0;
 
+     if (_enteredAmount < minLimit) {
+       depositAmount = '';
+       return;
+     }
+
+     if (_enteredAmount > maxLimit && isFixedRateMode) {
+       depositAmount = '';
+       return;
+     }
     /// in case the best rate was not calculated yet
     if (_bestRate == 0) {
       receiveAmount = S.current.fetching;
@@ -319,6 +334,25 @@ abstract class ExchangeViewModelBase with Store {
         .toString()
         .replaceAll(RegExp('\\,'), '');
   }
+
+    bool checkIfInputMeetsMinOrMaxCondition(String input) {
+     final _enteredAmount = double.tryParse(input.replaceAll(',', '.')) ?? 0;
+     double minLimit = limits.min ?? 0;
+     double maxLimit = limits.max ?? 0;
+
+     if (_enteredAmount < minLimit) {
+       receiveAmount = '';
+       return false;
+     }
+
+     if (_enteredAmount > maxLimit && isFixedRateMode) {
+       receiveAmount = '';
+       return false;
+     }
+
+     return true;
+   }
+
 
   Future<void> _calculateBestRate() async {
     final amount = double.tryParse(isFixedRateMode ? receiveAmount : depositAmount) ?? 1;

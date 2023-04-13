@@ -697,5 +697,7 @@
   "optional_name": "Optionaler Empfängername",
   "clearnet_link": "Clearnet-Link",
   "onion_link": "Zwiebel-Link",
-  "sell_monero_com_alert_content": "Der Verkauf von Monero wird noch nicht unterstützt"
+  "sell_monero_com_alert_content": "Der Verkauf von Monero wird noch nicht unterstützt",
+  "error_text_input_below_minimum_limit" : "Menge ist unter dem Minimum",
+  "error_text_input_above_maximum_limit" : "Menge ist über dem Maximum"
 }
