@@ -231,6 +231,7 @@ abstract class DashboardViewModelBase with Store {
     return appStore.settingsStore.shouldShowMarketPlaceInDashboard;
   }
 
+
   @computed
   List<TradeListItem> get trades => tradesStore.trades
       .where((trade) => trade.trade.walletId == wallet.id)

@@ -83,20 +83,31 @@ class DashboardPage extends BasePage {
 
   final DashboardViewModel walletViewModel;
   final WalletAddressListViewModel addressListViewModel;
-  final controller = PageController(initialPage: 1);
-
+  int get initialPage =>  walletViewModel.shouldShowMarketPlaceInDashboard == true ? 1:0;
   ObservableList<Widget> pages = ObservableList<Widget>();
   bool _isEffectsInstalled = false;
   StreamSubscription<bool>? _onInactiveSub;
 
   @override
   Widget body(BuildContext context) {
-    reaction((_) => walletViewModel.shouldShowMarketPlaceInDashboard,
+  final
+   controller = PageController(initialPage:initialPage);
+
+  reaction((_) => walletViewModel.shouldShowMarketPlaceInDashboard,
         (bool value) {
+          if(walletViewModel.shouldShowMarketPlaceInDashboard == false){
+             controller.jumpToPage(0);
+          }
       pages.clear();
       _isEffectsInstalled = false;
       _setEffects(context);
-    });
+
+      if(value == true){
+      controller.jumpToPage(1);
+      }else{
+      controller.jumpToPage(0);
+      }
+    }); 
     final sendImage = Image.asset('assets/images/upload.png',
         height: 24,
         width: 24,
